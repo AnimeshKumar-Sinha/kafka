@@ -27,3 +27,6 @@
          In a replicated topic in Apache Kafka, the offsets are also maintained along with the message data. When a message is produced to a Kafka topic, it is assigned a unique offset that represents its position within the partition. This offset is used to track the progress of consumers as they read messages from the topic.
          In a replicated topic, the offsets are replicated across all replicas of the partition. This ensures that each replica maintains the same sequence of messages and that they all have the same offset values. This is important for ensuring data consistency and fault tolerance in the Kafka cluster.`
          Additionally, Kafka also provides a mechanism for consumers to commit their current offset position back to the Kafka broker, which allows them to resume reading from where they left off in case of a failure or restart. This offset commit is also replicated across all replicas of the partition to ensure that all consumers have the same view of the current offset position.
+
+
+    3) How can the client find out which topics exist, what partitions they have, and which brokers currently host those partitions so that it can direct its requests to the right hosts
