@@ -1,0 +1,8 @@
+1) Design a data pipeline that uses Kafka for real-time data processing and storage?
+    a. Define the requirements:
+    b. Choose the Kafka cluster configuration
+    c. Configure the data sources
+    d. Define the data processing logic: I would define the data processing logic using Kafka Streams or other stream
+        processing frameworks, such as Spark Streaming or Flink. I would define the data processing pipeline, including data enrichment, filtering, aggregation, and transformation.
+    e. Choose the storage layer:
+    f. Monitor and optimize the data pipeline:
