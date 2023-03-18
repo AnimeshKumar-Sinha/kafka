@@ -1453,3 +1453,98 @@ d==> Then start the karfka server :
     [2023-03-12 00:50:52,300] INFO [GroupMetadataManager brokerId=0] Finished loading offsets and group metadata from __consumer_offsets-28 in 17 milliseconds for epoch 0, of which 17 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)
 
 
+E) ==> Check for this statement which tells, your kafka setup has been started.
+F) ==> Check your Data  directory: So you can make, idead your kafka directory is being used.
+
+ls -lrt
+total 40
+-rw-r--r--   1 animeshsinha  staff     4 Jan 28  2022 cleaner-offset-checkpoint
+drwxr-xr-x  16 animeshsinha  staff   512 Mar 12 00:50 version-2
+drwxr-xr-x   8 animeshsinha  staff   256 Mar 12 00:50 __consumer_offsets-40
+drwxr-xr-x   8 animeshsinha  staff   256 Mar 12 00:50 __consumer_offsets-5
+-rw-r--r--   1 animeshsinha  staff    88 Mar 12 00:50 meta.properties
+drwxr-xr-x   7 animeshsinha  staff   224 Mar 12 00:50 __consumer_offsets-3
+drwxr-xr-x   7 animeshsinha  staff   224 Mar 12 00:50 __consumer_offsets-18
+drwxr-xr-x   7 animeshsinha  staff   224 Mar 12 00:50 animesh-topic1-0
+drwxr-xr-x   7 animeshsinha  staff   224 Mar 12 00:50 __consumer_offsets-41
+drwxr-xr-x   7 animeshsinha  staff   224 Mar 12 00:50 animesh-topic2-0
+drwxr-xr-x   7 animeshsinha  staff   224 Mar 12 00:50 animesh-topic3-0
+drwxr-xr-x   7 animeshsinha  staff   224 Mar 12 00:50 __consumer_offsets-10
+
+G) == > You should check for ./kafka-topics.sh from your bin directory:
+        Create, delete, describe, or change a topic.
+
+            Option                                   Description
+            ------                                   -----------
+            --alter                                  Alter the number of partitions,
+                                                       replica assignment, and/or
+                                                       configuration for the topic.
+            --at-min-isr-partitions                  if set when describing topics, only
+                                                       show partitions whose isr count is
+                                                       equal to the configured minimum.
+            --bootstrap-server <String: server to    REQUIRED: The Kafka server to connect
+              connect to>                              to.
+            --command-config <String: command        Property file containing configs to be
+              config property file>                    passed to Admin Client. This is used
+
+A)  lets begin by creating a topic:
+
+  ==> ./kafka-topics.sh --bootstrap-server localhost:9092 --topic first_topic --create --partitions 3 --replication-factor 2
+
+  Note: you should check below, we have only one borker but I have replication-factor 2 which you can guess is not possible =: it should
+  error out:
+
+  Error while executing topic command : Replication factor: 2 larger than available brokers: 1.
+  [2023-03-12 01:20:19,754] ERROR org.apache.kafka.common.errors.InvalidReplicationFactorException: Replication factor: 2 larger than available brokers: 1.
+   (kafka.admin.TopicCommand$)
+
+   ===>
+   ./kafka-topics.sh --bootstrap-server localhost:9092 --topic first_topic --create --partitions 3 --replication-factor 2
+   WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
+   Error while executing topic command : Topic 'first_topic' already exists.
+   [2023-03-12 01:22:50,532] ERROR org.apache.kafka.common.errors.TopicExistsException: Topic 'first_topic' already exists.
+    (kafka.admin.TopicCommand$)
+
+
+
+B) ==> lets delete the topic:
+./kafka-topics.sh --bootstrap-server localhost:9092 --topic first_topic --delete
+
+and then recreated the TOPIC:
+
+./kafka-topics.sh --bootstrap-server localhost:9092 --topic first_topic --create --partitions 3 --replication-factor 1
+WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
+Created topic first_topic.
+
+C) All commands:
+    a) Describe the Topic
+
+    % ./kafka-topics.sh --bootstrap-server localhost:9092 --topic first_topic --describe
+    Topic: first_topic	TopicId: 3ccwB0_XSGu4SLvogSI5-A	PartitionCount: 3	ReplicationFactor: 1	Configs: segment.bytes=1073741824
+    	Topic: first_topic	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+    	Topic: first_topic	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
+    	Topic: first_topic	Partition: 2	Leader: 0	Replicas: 0	Isr: 0
+
+
+    b) List a topic
+
+    ./kafka-topics.sh --bootstrap-server localhost:9092 --list first_topic
+
+    ./kafka-topics.sh --bootstrap-server localhost:9092 --list first_topic
+    __consumer_offsets
+    animesh-topic1
+    animesh-topic2
+    animesh-topic3
+    first_topic
+
+
+   c) Produce content to Topic:
+
+    ./kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic first_topic >Animesh
+
+
+
+
+NOTE:: Today I restarted server using :
+./bin/zookeeper-server-start.sh config/zookeeper.properties
+kafka-server-start.sh config/server.properties
