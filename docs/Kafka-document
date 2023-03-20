@@ -1548,3 +1548,107 @@ C) All commands:
 NOTE:: Today I restarted server using :
 ./bin/zookeeper-server-start.sh config/zookeeper.properties
 kafka-server-start.sh config/server.properties
+
+1)
+
+you transaction class looks like this:
+
+public class Transaction {
+    private Long transactionId;
+    private String fromAccountNumber;
+    private String toAccountNumber;
+    private Double transferAmount;
+    private Double feePercent;
+    private Double feeAmount;
+
+    }
+
+/*
+* create a source stream from the given topic using the given builder
+* transactions, instance of Transaction.class, are present in given topic with name txn-in
+*/
+
+Can you write the implementation of the below method:
+create a source stream from the given topic using the given builder
+transactions, instance of Transaction.class, are present in given topic with name txn-in
+public KStream<String, Transaction> streamIn(StreamsBuilder builder, String topic) {
+
+
+
+
+
+
+import org.apache.kafka.streams.kstream.KStream;
+
+public class TransactionProcessor {
+
+  public KStream<String, Transaction> streamProcess(KStream<String, Transaction> inStream) {
+    // Process each transaction in the input stream
+    KStream<String, Transaction> processedStream = inStream
+        .mapValues(transaction -> {
+          // Calculate the value of the feeAmount field using the formula
+          Double feeAmount = transaction.getTransferAmount() * transaction.getFeePercent() / 100;
+          transaction.setFeeAmount(feeAmount);
+          return transaction;
+        });
+
+    // Output the processed transaction
+    processedStream.foreach((key, value) -> System.out.println("Processed transaction: " + value));
+
+    // Return the processed stream
+    return processedStream;
+  }
+}
+
+  sink the given stream to the given topic
+
+  public void streamOut(KStream<String, Transaction> processedStream, String topic) {
+        //
+    }
+
+create a kafka stream to connect topology nodes using given topology and config
+
+public KafkaStreams connectStreams(Topology topology, Properties steamConfig) {
+        return null;
+    }
+
+
+{
+	"resource": "file:///projects/challenge/src/main/java/com/hackerrank/kaffka/stream/TransactionProcessor.java",
+	"owner": "_generated_diagnostic_collection_name_#f2812868-4d82-47be-94b0-e8fd46405a17",
+	"code": "67108979",
+	"severity": 1,
+	"message": "
+
+	The method filter(Predicate<? super String,? super Transaction>) in the type KStream<String,Transaction>
+	is not applicable for the arguments ((<no type> k, <no type> txn) -> {})",
+	"source": "Java",
+	"startLineNumber": 29,
+	"startColumn": 20,
+	"endLineNumber": 29,
+	"endColumn": 26
+}
+
+
+
+test2StreamProcessing(com.hackerrank.kaffka.ApplicationTest)  Time elapsed: 1.023 sec  <<< ERROR!
+java.lang.IllegalThreadStateException
+        at java.lang.Thread.start(Thread.java:708)
+        at org.apache.kafka.streams.KafkaStreams.processStreamThread(KafkaStreams.java:1663)
+        at org.apache.kafka.streams.KafkaStreams.star
+
+
+
+
+
+                set bootstrap servers
+                set application id
+
+                set key serializer/deserializer
+                set value serializer/deserializer
+
+
+             Transaction model class serializer/deserializer is already provided in TransactionSerde
+            Properties createStreamConfig(Properties kafkaConfig);
+
+// Test git checking
